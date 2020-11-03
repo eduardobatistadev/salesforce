@@ -1,21 +1,22 @@
-@IsTest
-private with sharing class AccountManagerTest {
-    @isTest
-    static void AccountManagerTest() {
-        Id idconta = createidconta();
-
+@isTest 
+private class AccountManagerTest{
+    static testMethod void testMethod1(){
+        Account objAccount = new Account(Name = 'test Account');
+        insert objAccount;
+        Contact objContact = new Contact(LastName = 'test Contact',
+                                         AccountId = objAccount.Id);
+        insert objContact;
+        Id recordId = objAccount.Id;
         RestRequest request = new RestRequest();
-
-        request.requestURI = ''+idconta;
-
+        request.requestUri =
+            'https://sandeepidentity-dev-ed.my.salesforce.com/services/apexrest/Accounts/'
+            + recordId +'/contacts';
         request.httpMethod = 'GET';
-
         RestContext.request = request;
-
+        // Call the method to test
         Account thisAccount = AccountManager.getAccount();
-
-        System.assert(thisAccount != null);
-        System.assertEquals('Test', thisAccount.Name);
-
+        // Verify results
+        System.assert(thisAccount!= null);
+        System.assertEquals('test Account', thisAccount.Name);
     }
 }
